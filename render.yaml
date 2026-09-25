@@ -1,0 +1,59 @@
+services:
+  - type: web
+    name: ai-notes-backend
+    env: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: DJANGO_SECRET_KEY
+        generateValue: true
+      - key: DJANGO_DEBUG
+        value: "False"
+      - key: DJANGO_ALLOWED_HOSTS
+        value: ".onrender.com"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: ai-notes-db
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: ai-notes-redis
+          property: connectionString
+      - key: GENAI_API_KEY
+        sync: false
+      - key: CORS_ALLOWED_ORIGINS
+        sync: false
+      - key: CSRF_TRUSTED_ORIGINS
+        sync: false
+    preDeployCommand: python manage.py migrate
+
+  - type: worker
+    name: ai-notes-worker
+    env: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    dockerCommand: celery -A config worker -l info
+    envVars:
+      - key: DJANGO_SECRET_KEY
+        sync: false
+      - key: DATABASE_URL
+        fromDatabase:
+          name: ai-notes-db
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: ai-notes-redis
+          property: connectionString
+      - key: GENAI_API_KEY
+        sync: false
+
+  - type: redis
+    name: ai-notes-redis
+    plan: free
+    ipAllowList: []
+
+databases:
+  - name: ai-notes-db
+    plan: free

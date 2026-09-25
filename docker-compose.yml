@@ -1,0 +1,56 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ai_notes
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+
+  web:
+    build: .
+    command: >
+      sh -c "python manage.py migrate &&
+             python manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    environment:
+      DJANGO_DEBUG: "True"
+      DATABASE_URL: postgres://postgres:postgres@db:5432/ai_notes
+      DB_SSL_REQUIRE: "False"
+      REDIS_URL: redis://redis:6379/0
+      GENAI_API_KEY: ${GENAI_API_KEY:-}
+    depends_on:
+      - db
+      - redis
+
+  worker:
+    build: .
+    command: celery -A config worker -l info
+    volumes:
+      - .:/app
+    environment:
+      DATABASE_URL: postgres://postgres:postgres@db:5432/ai_notes
+      DB_SSL_REQUIRE: "False"
+      REDIS_URL: redis://redis:6379/0
+      GENAI_API_KEY: ${GENAI_API_KEY:-}
+    depends_on:
+      - db
+      - redis
+
+volumes:
+  pgdata:
