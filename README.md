@@ -1,6 +1,6 @@
 # AI Notes & Task Assistant
 
-![CI](https://github.com/YOUR_USERNAME/ai-notes-assistant/actions/workflows/ci.yml/badge.svg)
+![CI](https://github.com/BeautyMauryaa/ai-notes-assistant/actions/workflows/ci.yml/badge.svg)
 ![Python](https://img.shields.io/badge/Python-3.12-blue)
 ![Django](https://img.shields.io/badge/Django-5.0-092E20)
 ![License](https://img.shields.io/badge/license-MIT-lightgrey)
