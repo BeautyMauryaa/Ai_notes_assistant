@@ -130,7 +130,3 @@ the free Postgres/Redis instances expire after ~90 days — fine for a CV demo
 link, not for anything long-term. Mention this if a recruiter asks about
 production readiness; it's a fair trade-off to call out, not a flaw to hide.
 
-## Possible extensions if you have more time
-- Deploy on Render/Railway + Vercel and add the live link to your CV
-- Add Swagger/OpenAPI docs (`drf-spectacular`)
-- Add a Dockerfile + docker-compose (Django, Postgres, Redis, Celery) — strong "deployment concepts" signal for this JD
