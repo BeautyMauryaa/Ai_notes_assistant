@@ -10,7 +10,7 @@ auto-summarizes and auto-tags notes. Built to demonstrate an end-to-end
 Django + DRF + PostgreSQL + Celery/Redis + React stack with a real GenAI
 integration, CI, and API documentation.
 
-**Live demo:** _add your deployed link here once deployed (see "Deploying it" below)_
+**Live demo:** Not linked yet. Add the URL here after verifying a live deployment.
 **API docs:** `/api/docs/` once running (Swagger UI)
 
 ## Features
@@ -88,16 +88,15 @@ python manage.py test
 - Set up a **CI pipeline with GitHub Actions** running automated tests and linting against a live Postgres + Redis service on every push.
 - Added **interactive OpenAPI/Swagger documentation** (`drf-spectacular`) and API rate limiting for production readiness.
 - Wrote **unit and integration tests** (DRF `APITestCase`) covering API permissions, search, and async task triggering.
-- Containerized the app with **Docker/docker-compose** and deployed it to **Render** (backend/worker/Postgres/Redis) and **Vercel** (frontend).
+- Containerized the app with **Docker/docker-compose** and added a **Render blueprint** plus frontend deployment instructions. Add live URLs after each service is deployed and verified.
 - Built a **React** frontend consuming the DRF API, with polling to reflect async AI results in real time.
 
 ## Deploying it
 
-### Backend + worker + Postgres + Redis → Render (free tier)
+### Backend + worker + Postgres + Redis → Render
 1. Push this repo to GitHub.
 2. In Render: **New → Blueprint**, connect the repo. Render reads `render.yaml`
-   and creates the web service, Celery worker, a free Postgres database, and
-   a free Redis instance automatically.
+   and provisions the resources defined in the blueprint. Check the current Render plan and limits for each resource type before deploying.
 3. When prompted, set `GENAI_API_KEY` (optional — falls back to a naive
    summarizer without it) and, once you know your frontend's URL,
    `CORS_ALLOWED_ORIGINS` / `CSRF_TRUSTED_ORIGINS` (comma-separated, e.g.
@@ -125,8 +124,5 @@ docker compose up --build
 This starts Postgres, Redis, the Django API, and the Celery worker together.
 Run migrations happen automatically on the `web` container's startup.
 
-**Note on Render's free tier:** free web services sleep after inactivity and
-the free Postgres/Redis instances expire after ~90 days — fine for a CV demo
-link, not for anything long-term. Mention this if a recruiter asks about
-production readiness; it's a fair trade-off to call out, not a flaw to hide.
+**Deployment note:** Review the current hosting plan, resource limits, persistence policy, and sleep behavior before relying on a free-tier deployment. State these limits clearly when presenting a demo.
 
